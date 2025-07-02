@@ -190,9 +190,44 @@ app.post('/webhook', async (req, res) => {
         break;
         
       case 'teamkill':
+        // Legacy teamkill format - maintain backward compatibility
         const { killerName, victimName, killerFaction, victimFaction } = data;
         message = `${killerName} (${killerFaction}) **Teamkilled** ${victimName} (${victimFaction})`;
         console.log(`Teamkill: ${killerName} killed ${victimName}`);
+        break;
+        
+      case 'kill':
+        // New comprehensive kill format
+        const {
+          killerId, killerName: newKillerName, killerFaction: newKillerFaction, 
+          killerFactionKey, killerFactionIndex: newKillerFactionIndex,
+          victimId, victimName: newVictimName, victimFaction: newVictimFaction,
+          victimFactionKey, victimFactionIndex: newVictimFactionIndex,
+          killType, source
+        } = data;
+        
+        // Get faction symbols for both killer and victim
+        const killerFactionSymbol = factions.factions[newKillerFactionIndex] || ':grey_question:';
+        const victimFactionSymbol = factions.factions[newVictimFactionIndex] || ':grey_question:';
+        
+        // Format message based on kill type
+        switch (killType) {
+          case 'teamkill':
+            message = `${killerFactionSymbol} ${newKillerName} (${newKillerFaction}) **Teamkilled** ${victimFactionSymbol} ${newVictimName} (${newVictimFaction})`;
+            break;
+          case 'enemy_kill':
+            message = `${killerFactionSymbol} ${newKillerName} (${newKillerFaction}) **Killed** ${victimFactionSymbol} ${newVictimName} (${newVictimFaction})`;
+            break;
+          case 'suicide':
+            message = `${victimFactionSymbol} ${newVictimName} (${newVictimFaction}) **Committed Suicide**`;
+            break;
+          case 'unknown':
+          default:
+            message = `${killerFactionSymbol} ${newKillerName} (${newKillerFaction}) **Killed** ${victimFactionSymbol} ${newVictimName} (${newVictimFaction}) (Type: ${killType})`;
+            break;
+        }
+        
+        console.log(`${killType}: ${newKillerName || 'Unknown'} killed ${newVictimName} (Source: ${source || 'unknown'})`);
         break;
         
       case 'player_joined':
