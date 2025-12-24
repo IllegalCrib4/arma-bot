@@ -50,6 +50,4 @@ debug.log
 dist/
 build/ 
 
-servers.json
-
 scripts/

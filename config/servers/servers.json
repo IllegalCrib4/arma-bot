@@ -1,0 +1,11 @@
+{
+  "currentServer": "armaserver",
+  "servers": {
+    "armaserver": {
+      "name": "Project Vision",
+      "address": "144.48.106.188",
+      "port": 7937,
+      "password": "Schoolbus2025!"
+    }
+  }
+} 
