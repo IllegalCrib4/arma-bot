@@ -1,5 +1,5 @@
 {
-  "name": "arma-bot",
+  "name": "arma-bot1",
   "version": "1.0.0",
   "description": "Discord bot for Arma server management",
   "main": "src/index.js",
